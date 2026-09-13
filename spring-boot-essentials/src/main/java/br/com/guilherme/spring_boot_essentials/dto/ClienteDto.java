@@ -1,22 +1,16 @@
-package br.com.guilherme.spring_boot_essentials.entity;
+package br.com.guilherme.spring_boot_essentials.dto;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 
-@Entity
-@Table(name = "clientes")
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder
-public class Cliente {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ClienteDto {
 
     private String nome;
     private String cpf;
