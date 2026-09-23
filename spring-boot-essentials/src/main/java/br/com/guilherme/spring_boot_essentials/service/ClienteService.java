@@ -18,7 +18,15 @@ public class ClienteService {
         this.repository = repositoty;
     }
 
-    public Cliente criar(Cliente cliente) {
+    public Cliente criar(ClienteDto clienteDto) {
+
+        Cliente cliente = new Cliente();
+
+        cliente.setNome(clienteDto.getNome());
+        cliente.setCpf(clienteDto.getCpf());
+        cliente.setEmail(clienteDto.getEmail());
+        cliente.setTelefone(clienteDto.getTelefone());
+
         return repository.save(cliente);
     }
 

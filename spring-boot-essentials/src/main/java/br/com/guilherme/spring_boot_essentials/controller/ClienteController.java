@@ -3,10 +3,12 @@ package br.com.guilherme.spring_boot_essentials.controller;
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
 import br.com.guilherme.spring_boot_essentials.entity.Cliente;
 import br.com.guilherme.spring_boot_essentials.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping(value = "/v1/clientes")
@@ -14,14 +16,14 @@ public class ClienteController {
 
     private final ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService){
+    public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente criar(@RequestBody Cliente cliente){
-        return clienteService.criar(cliente);
+    public Cliente criar(@Valid @RequestBody ClienteDto clienteDto) {
+        return clienteService.criar(clienteDto);
     }
 
     @GetMapping
@@ -37,9 +39,7 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente atualizarCliente(
-            @PathVariable Long id,
-            @RequestBody ClienteDto clienteDto) {
+    public Cliente atualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteDto clienteDto) {
 
         return clienteService.atualizar(clienteDto, id);
     }
@@ -49,4 +49,5 @@ public class ClienteController {
     public void deletar(@PathVariable Long id) {
         clienteService.deletar(id);
     }
+
 }
