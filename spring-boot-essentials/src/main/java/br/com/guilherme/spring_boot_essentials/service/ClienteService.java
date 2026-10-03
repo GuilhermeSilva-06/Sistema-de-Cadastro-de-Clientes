@@ -2,6 +2,7 @@ package br.com.guilherme.spring_boot_essentials.service;
 
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
 import br.com.guilherme.spring_boot_essentials.entity.Cliente;
+import br.com.guilherme.spring_boot_essentials.exception.ClienteNotFoundException;
 import br.com.guilherme.spring_boot_essentials.repository.ClienteRepositoty;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,10 +49,9 @@ public class ClienteService {
 
     public Cliente buscarPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Cliente não encontrado"
-                ));
+                .orElseThrow(() ->
+                        new ClienteNotFoundException("Cliente não encontrado")
+                );
     }
 
     public void deletar(Long id) {
