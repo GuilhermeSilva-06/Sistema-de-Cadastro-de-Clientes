@@ -1,5 +1,6 @@
 package br.com.guilherme.spring_boot_essentials.handler;
 
+import br.com.guilherme.spring_boot_essentials.exception.ClienteAlreadyExistsException;
 import br.com.guilherme.spring_boot_essentials.exception.ClienteNotFoundException;
 import br.com.guilherme.spring_boot_essentials.exception.ErroResponse;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(ClienteAlreadyExistsException.class)
+    public ResponseEntity<ErroResponse> handleAlreadyExistsException(
+            ClienteAlreadyExistsException ex) {
+
+        ErroResponse response = ErroResponse.builder()
+                .msg(ex.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(response);
     }
 }

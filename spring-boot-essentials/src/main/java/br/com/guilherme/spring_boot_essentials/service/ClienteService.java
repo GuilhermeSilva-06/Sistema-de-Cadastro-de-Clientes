@@ -2,11 +2,11 @@ package br.com.guilherme.spring_boot_essentials.service;
 
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
 import br.com.guilherme.spring_boot_essentials.entity.Cliente;
+import br.com.guilherme.spring_boot_essentials.exception.ClienteAlreadyExistsException;
 import br.com.guilherme.spring_boot_essentials.exception.ClienteNotFoundException;
 import br.com.guilherme.spring_boot_essentials.repository.ClienteRepositoty;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -20,6 +20,14 @@ public class ClienteService {
     }
 
     public Cliente criar(ClienteDto clienteDto) {
+
+        if (repository.findByCpf(clienteDto.getCpf()).isPresent()) {
+            throw new ClienteAlreadyExistsException("CPF já cadastrado");
+        }
+
+        if (repository.findByEmail(clienteDto.getEmail()).isPresent()) {
+            throw new ClienteAlreadyExistsException("E-mail já cadastrado");
+        }
 
         Cliente cliente = new Cliente();
 
@@ -37,6 +45,20 @@ public class ClienteService {
 
     public Cliente atualizar(ClienteDto clienteDto, Long id) {
         Cliente cliente = buscarPorId(id);
+
+        repository.findByCpf(clienteDto.getCpf())
+                .ifPresent(clienteEncontrado -> {
+                    if (!clienteEncontrado.getId().equals(id)) {
+                        throw new ClienteAlreadyExistsException("CPF já cadastrado");
+                    }
+                });
+
+        repository.findByEmail(clienteDto.getEmail())
+                .ifPresent(clienteEncontrado -> {
+                    if (!clienteEncontrado.getId().equals(id)) {
+                        throw new ClienteAlreadyExistsException("E-mail já cadastrado");
+                    }
+                });
 
         cliente.setNome(clienteDto.getNome());
         cliente.setCpf(clienteDto.getCpf());
