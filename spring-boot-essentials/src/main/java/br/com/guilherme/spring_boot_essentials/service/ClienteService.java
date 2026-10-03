@@ -1,6 +1,7 @@
 package br.com.guilherme.spring_boot_essentials.service;
 
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
+import br.com.guilherme.spring_boot_essentials.dto.ClienteResponseDto;
 import br.com.guilherme.spring_boot_essentials.entity.Cliente;
 import br.com.guilherme.spring_boot_essentials.exception.ClienteAlreadyExistsException;
 import br.com.guilherme.spring_boot_essentials.exception.ClienteNotFoundException;
@@ -15,11 +16,11 @@ public class ClienteService {
 
     private final ClienteRepositoty repository;
 
-    public ClienteService(ClienteRepositoty repositoty) {
-        this.repository = repositoty;
+    public ClienteService(ClienteRepositoty repository) {
+        this.repository = repository;
     }
 
-    public Cliente criar(ClienteDto clienteDto) {
+    public ClienteResponseDto criar(ClienteDto clienteDto) {
 
         if (repository.findByCpf(clienteDto.getCpf()).isPresent()) {
             throw new ClienteAlreadyExistsException("CPF já cadastrado");
@@ -36,15 +37,29 @@ public class ClienteService {
         cliente.setEmail(clienteDto.getEmail());
         cliente.setTelefone(clienteDto.getTelefone());
 
-        return repository.save(cliente);
+        Cliente clienteSalvo = repository.save(cliente);
+
+        return toResponseDto(clienteSalvo);
     }
 
-    public List<Cliente> listar() {
-        return repository.findAll();
+    public List<ClienteResponseDto> listar() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
     }
 
-    public Cliente atualizar(ClienteDto clienteDto, Long id) {
-        Cliente cliente = buscarPorId(id);
+    public ClienteResponseDto buscarPorId(Long id) {
+
+        Cliente cliente = buscarEntidadePorId(id);
+
+        return toResponseDto(cliente);
+    }
+
+    public ClienteResponseDto atualizar(ClienteDto clienteDto, Long id) {
+
+        Cliente cliente = buscarEntidadePorId(id);
 
         repository.findByCpf(clienteDto.getCpf())
                 .ifPresent(clienteEncontrado -> {
@@ -65,20 +80,34 @@ public class ClienteService {
         cliente.setEmail(clienteDto.getEmail());
         cliente.setTelefone(clienteDto.getTelefone());
 
-        return repository.save(cliente);
+        Cliente clienteAtualizado = repository.save(cliente);
+
+        return toResponseDto(clienteAtualizado);
     }
 
+    public void deletar(Long id) {
 
-    public Cliente buscarPorId(Long id) {
+        Cliente cliente = buscarEntidadePorId(id);
+
+        repository.delete(cliente);
+    }
+
+    private Cliente buscarEntidadePorId(Long id) {
+
         return repository.findById(id)
                 .orElseThrow(() ->
                         new ClienteNotFoundException("Cliente não encontrado")
                 );
     }
 
-    public void deletar(Long id) {
-        Cliente cliente = buscarPorId(id);
+    private ClienteResponseDto toResponseDto(Cliente cliente) {
 
-        repository.delete(cliente);
+        return ClienteResponseDto.builder()
+                .id(cliente.getId())
+                .nome(cliente.getNome())
+                .cpf(cliente.getCpf())
+                .email(cliente.getEmail())
+                .telefone(cliente.getTelefone())
+                .build();
     }
 }

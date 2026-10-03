@@ -1,7 +1,7 @@
 package br.com.guilherme.spring_boot_essentials.controller;
 
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
-import br.com.guilherme.spring_boot_essentials.entity.Cliente;
+import br.com.guilherme.spring_boot_essentials.dto.ClienteResponseDto;
 import br.com.guilherme.spring_boot_essentials.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,24 +22,31 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente criar(@Valid @RequestBody ClienteDto clienteDto) {
+    public ClienteResponseDto criar(
+            @Valid @RequestBody ClienteDto clienteDto) {
+
         return clienteService.criar(clienteDto);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Cliente> listar() {
+    public List<ClienteResponseDto> listar() {
+
         return clienteService.listar();
     }
 
     @GetMapping("/{id}")
-    public Cliente buscarPorId(@PathVariable Long id) {
+    public ClienteResponseDto buscarPorId(
+            @PathVariable Long id) {
+
         return clienteService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente atualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteDto clienteDto) {
+    public ClienteResponseDto atualizarCliente(
+            @PathVariable Long id,
+            @Valid @RequestBody ClienteDto clienteDto) {
 
         return clienteService.atualizar(clienteDto, id);
     }
@@ -47,7 +54,7 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
+
         clienteService.deletar(id);
     }
-
 }
