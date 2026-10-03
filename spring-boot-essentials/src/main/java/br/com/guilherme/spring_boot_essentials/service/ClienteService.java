@@ -75,6 +75,10 @@ public class ClienteService {
                     }
                 });
 
+        if (!cliente.getCpf().equals(clienteDto.getCpf())) {
+            throw new ClienteAlreadyExistsException("CPF não pode ser alterado");
+        }
+
         cliente.setNome(clienteDto.getNome());
         cliente.setCpf(clienteDto.getCpf());
         cliente.setEmail(clienteDto.getEmail());
