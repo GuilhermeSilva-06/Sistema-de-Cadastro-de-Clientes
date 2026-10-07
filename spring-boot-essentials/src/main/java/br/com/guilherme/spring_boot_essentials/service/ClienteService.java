@@ -58,6 +58,22 @@ public class ClienteService {
                 .toList();
     }
 
+    public List<ClienteResponseDto> buscarPorCpf(String cpf) {
+
+        return repository.findByCpfContaining(cpf)
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
+    }
+
+    public List<ClienteResponseDto> buscarPorEmail(String email) {
+
+        return repository.findByEmailContaining(email)
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
+    }
+
     public ClienteResponseDto buscarPorId(Long id) {
 
         Cliente cliente = buscarEntidadePorId(id);

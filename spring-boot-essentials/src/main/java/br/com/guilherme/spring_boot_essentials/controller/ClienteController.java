@@ -33,14 +33,26 @@ public class ClienteController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ClienteResponseDto> listar(
-            @RequestParam(required = false) String nome) {
+            @RequestParam(required = false) String nome, String cpf, String email) {
 
         if (nome != null && !nome.isBlank()) {
             return clienteService.buscarPorNome(nome);
         }
 
+        if (cpf != null && !cpf.isBlank()) {
+            return clienteService.buscarPorCpf(cpf);
+        }
+
+        if (email != null && !email.isBlank()) {
+            return clienteService.buscarPorEmail(email);
+        }
+
         return clienteService.listar();
     }
+
+
+
+
 
 
 
