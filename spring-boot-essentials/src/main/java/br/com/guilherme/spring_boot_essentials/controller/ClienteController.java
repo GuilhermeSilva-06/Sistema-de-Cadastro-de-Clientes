@@ -2,9 +2,11 @@ package br.com.guilherme.spring_boot_essentials.controller;
 
 import br.com.guilherme.spring_boot_essentials.dto.ClienteDto;
 import br.com.guilherme.spring_boot_essentials.dto.ClienteResponseDto;
+import br.com.guilherme.spring_boot_essentials.entity.Cliente;
 import br.com.guilherme.spring_boot_essentials.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +32,17 @@ public class ClienteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ClienteResponseDto> listar() {
+    public List<ClienteResponseDto> listar(
+            @RequestParam(required = false) String nome) {
+
+        if (nome != null && !nome.isBlank()) {
+            return clienteService.buscarPorNome(nome);
+        }
 
         return clienteService.listar();
     }
+
+
 
     @GetMapping("/{id}")
     public ClienteResponseDto buscarPorId(

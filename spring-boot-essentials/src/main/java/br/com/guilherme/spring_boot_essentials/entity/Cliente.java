@@ -1,10 +1,9 @@
 package br.com.guilherme.spring_boot_essentials.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
+
 
 
 @Entity

@@ -50,6 +50,14 @@ public class ClienteService {
                 .toList();
     }
 
+    public List<ClienteResponseDto> buscarPorNome(String nome) {
+
+        return repository.findByNomeContaining(nome)
+                .stream()
+                .map(this::toResponseDto)
+                .toList();
+    }
+
     public ClienteResponseDto buscarPorId(Long id) {
 
         Cliente cliente = buscarEntidadePorId(id);
